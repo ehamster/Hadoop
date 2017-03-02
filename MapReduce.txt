@@ -1,0 +1,40 @@
+Inputs and Outputs
+
+The MapReduce framework operates exclusively on <key, value> pairs, that is, the framework views the input to the job as
+a set of <key,value> pairs and produces a set of <key, value> pairs as the output of the job, conceivably of different types.
+
+在Hadoop中，每个MapReduce任务都被初始化为一个Job，每个Job又可以分为两种阶段：map阶段和reduce阶段。这两个阶段分别用两个函数表示，
+即map函数和reduce函数。map函数接收一个<key,value>形式的输入，然后同样产生一个<key,value>形式的中间输出，Hadoop函数接收一个如<key,(list of values)>
+形式的输入，然后对这个value集合进行处理，每个reduce产生0或1个输出，reduce的输出也是<key,value>形式的
+
+Hadoop提供了如下内容的数据类型，这些数据类型都实现了WritableComparable接口，以便用这些类型定义的数据可以被序列化进行网络传输和文件存储，
+以及进行大小比较。
+
+
+    BooleanWritable：标准布尔型数值
+
+    ByteWritable：单字节数值
+
+    DoubleWritable：双字节数
+
+    FloatWritable：浮点数
+
+    IntWritable：整型数
+
+    LongWritable：长整型数
+
+    Text：使用UTF8格式存储的文本
+
+    NullWritable：当<key,value>中的key或value为空时使用
+    ////////////////////////////////////////////////////////////////////////////////////////////
+    conf.setInputFormat(TextInputFormat.class );
+
+    conf.setOutputFormat(TextOutputFormat.class );
+    
+    InputFormat()方法是用来生成可供map处理的<key,value>对的。
+    每一种输入格式都有一种输出格式与其对应。默认的输出格式是TextOutputFormat，这种输出方式与输入类似，会将每条记录以一行的形式存入文本文件。
+    不过，它的键和值可以是任意形式的，因为程序内容会调用toString()方法将键和值转换为String类型再输出。
+    
+    
+
+ 
