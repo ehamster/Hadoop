@@ -1,3 +1,5 @@
+所有代码复制完后记得检查是否有错误，比如'-'变成'，'
+出问题先 $ sbin/stop-dfs.sh   再$ bin/hdfs namenode -format再$ sbin/start-dfs.sh 先要把input放到hdfs里面！！再从里面的output拿出来！！
 Install java  sudo apt-get install openjdk-7-jdk
 Ctrl c 是终止
 
@@ -43,19 +45,39 @@ etc/hadoop/hdfs-site.xml:
     </property>
 </configuration>
 
-2.修改权限
+2.修改权限(可以先不做)
 ubuntu@ip-172-31-37-58:~$ chmod 777 ~/.ssh
 
 3.
-1. ssh-keygen -t rsa
-Press enter for each line 
-2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
-3. chmod og-wx ~/.ssh/authorized_keys 
+ 1. ssh-keygen -t rsa
+ Press enter for each line 
+ 2. cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys
+ 3. chmod og-wx ~/.ssh/authorized_keys 
 
 
 4.Now check that you can ssh to the localhost without a passphrase:
   $ ssh localhost
-5.
+5.配置完成好dfs后：  (1)$ sbin/stop-dfs.sh (2)$ bin/hdfs namenode -format (3)$ sbin/start-dfs.sh
+                    (4)$ sbin/hadoop-daemon.sh start datanode //datanode 不知道为什么不会自动开
+6.Make the HDFS directories required to execute MapReduce jobs:
+
+  $ bin/hdfs dfs -mkdir /user
+  $ bin/hdfs dfs -mkdir /user/<username>   ps：$ bin/hdfs dfs -mkdir /user/ubuntu
+
+  在HDFS上面创建用户名目录，必须做！！！
+7.创建input目录在HDFS上，上传input文件到里面
+  $ bin/hdfs dfs -mkdir input
+  ubuntu@ip-172-31-34-11:~/hadoop-2.7.3$ bin/hdfs dfs -put input/* input
+8.编译！！
+  $ bin/hadoop com.sun.tools.javac.Main WordCount.java
+  $ jar cf wc.jar WordCount*.class
+9.运行
+   $ bin/hadoop jar wc.jar WordCount /user/ubuntu/input /user/ubuntu/output
+   
+10.把output从hdfs取下来到本地
+   $ bin/hdfs dfs -get output output
+
+11.
 The following instructions are to run a MapReduce job locally. If you want to execute a job on YARN, see YARN on Single Node.
 
 Format the filesystem:
@@ -69,20 +91,20 @@ Start NameNode daemon and DataNode daemon:
 
 The hadoop daemon log output is written to the $HADOOP_LOG_DIR directory (defaults to $HADOOP_HOME/logs).
 
-6.Run some of the examples provided:
+12.Run some of the examples provided:
   $ bin/hadoop jar share/hadoop/mapreduce/hadoop-mapreduce-examples-2.7.3.jar grep input output 'dfs[a-z.]+'
 
-7.Examine the output files: Copy the output files from the distributed filesystem to the local filesystem and examine them:
+13.Examine the output files: Copy the output files from the distributed filesystem to the local filesystem and examine them:
   $ bin/hdfs dfs -get output output
   $ cat output/*
 or
 View the output files on the distributed filesystem:
   $ bin/hdfs dfs -cat output/*
 
-8. When you’re done, stop the daemons with:
+14. When you’re done, stop the daemons with:
   $ sbin/stop-dfs.sh
 
-9.YARN
+15.YARN
 
 Configure parameters as follows:etc/hadoop/mapred-site.xml:
 
@@ -103,10 +125,10 @@ etc/hadoop/yarn-site.xml:
 </configuration>
 
 
-10. Start ResourceManager daemon and NodeManager daemon:
+16. Start ResourceManager daemon and NodeManager daemon:
 
   $ sbin/start-yarn.sh
 
 
-11. When you’re done, stop the daemons with:
+17. When you’re done, stop the daemons with:
   $ sbin/stop-yarn.sh
