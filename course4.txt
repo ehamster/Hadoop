@@ -1,0 +1,36 @@
+It is good to use hadoop (characteristic)
+Log data: Write once and read often. // add one byte in begining, every byte need to be shifted 
+
+Need to design splitting size
+default splitting size is same as a block size
+block size is decided by HDFS
+
+
+So by default, each Mapper is one block
+each mapper process one split input
+
+shuffling is down auto. Dont need to set class to do shuffling
+
+parameter  0-100
+100: do shuffling after all mapping(too late)(default)
+50: half mapping down, start shuffling
+
+1 single reducer (default)
+if # of reducer is more than # of key, same number of reducer would process
+
+standlone:one node with one thread
+pseudo -distributed mode:one virtual node with multiple threads(logical multiple nodes)
+    use ssh to communicate each logical nodes(use key)
+    use passphraseless ssh to communicate nodes without key
+    use pair keys (public and private)
+    rsa
+    send public key to other who want to commu with itself, keep private
+  client to server
+  save client public key in server in authorized-key file
+  next time if client send public  key to server, server complite keys
+  if match, do not need password.
+Fully-distributed mode
+  
+  Now hadoop has one active name node and some standby name nodes
+  if active name node fail, standby name node will connect journalNode get all information 
+ 
