@@ -27,6 +27,8 @@ Hadoop提供了如下内容的数据类型，这些数据类型都实现了Writa
 
     NullWritable：当<key,value>中的key或value为空时使用
     ////////////////////////////////////////////////////////////////////////////////////////////
+    Configuration conf = new Configuration();
+运行MapReduce程序前都要初始化Configuration，该类主要是读取MapReduce系统配置信息，这些信息包括hdfs还有MapReduce，也就是安装hadoop时候的配置文件例如：core-site.xml、hdfs-site.xml和mapred-site.xml等等文件里的信息，有些童鞋不理解为啥要这么做，这个是没有深入思考MapReduce计算框架造成，我们程序员开发MapReduce时候只是在填空，在map函数和reduce函数里编写实际进行的业务逻辑，其它的工作都是交给MapReduce框架自己操作的，但是至少我们要告诉它怎么操作啊，比如hdfs在哪里，MapReduce的jobstracker在哪里，而这些信息就在conf包下的配置文件里。
     conf.setInputFormat(TextInputFormat.class );
 
     conf.setOutputFormat(TextOutputFormat.class );
@@ -39,5 +41,6 @@ Hadoop提供了如下内容的数据类型，这些数据类型都实现了Writa
     生成InputSplit的方法可以通过InputFormat()来设置。
     data stream ： InputSplit ==> map ==>  reduce
     Data:            <chunk>      <K,V>     <K,V>
+    
     
  
