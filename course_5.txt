@@ -1,0 +1,22 @@
+YRAN 
+      is the core of the hadoop 
+      is a resource management cup mempry bandwidth 
+Hadoop 1 has only MapReducer
+    MainLimitation
+    different between hadoop1 and 2
+    
+hadoop 1 has task tracker no node manager. job tracker run on master manager all program
+jobtracker figure out how much resource  app need
+
+
+
+hadoop 2 has node manager,every application manager by application master in different nodes.
+only application master maintain global info in h2
+when one app appear the resource manager ask node manager to create app manager instance   //communcate with tcpip
+1 node manager only have 1 app manager
+
+1 app master manage 1 app
+
+benefit form h1 to h2
+1. job tracker do almost everything, h1 can do just mapreducer,h2 is flexible,support more engine
+2. each app manager by different app master.  
