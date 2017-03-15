@@ -43,4 +43,6 @@ Hadoop提供了如下内容的数据类型，这些数据类型都实现了Writa
     Data:            <chunk>      <K,V>     <K,V>
     
     
- 
+将文本的一行的行号作为key，这一行的文本作为value。这就是自定义Map的输入是<LongWritable, Text>的原因
+(K1,V1) –> Map –> (K2,V2)
+(K2,List[V2]) –> Reduce –> (K3,V3)
