@@ -49,3 +49,11 @@ wc	Print a count of lines, words and bytes for each input file ("word count")
 wc -c	Print only the number of characters.
 wc -l	Print only the number of lines.
 
+
+Hadoop Distributed Files System write files
+1.client request , name node validate whether you have right
+2.client requests a list of datanode to put a fraction of files
+3. client sends packet of files to closest data node
+4. later data node on the pipeline will transfer copy of the packet
+5. the packet stores in all datanode, data node send acknowledge packet back
+6. if one data node wrong. mark it bad and organize the pipeline again
