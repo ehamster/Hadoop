@@ -124,4 +124,21 @@ String就是java里面的
         var myList1 = range(10, 20, 2)//步长为2
         
         
+Collection
+    1.List  不可变
+    val dim: List[List[Int]] =
+   List(
+      List(1, 0, 0),
+      List(0, 1, 0),
+      List(0, 0, 1)
+   )
    
+   2.Set默认调用的是不可变的，如果想要用可变的需要使用import scala.collection.mutable.Set // 可以在任何地方引入 可变集合
+   
+   val mutableSet = Set(1,2,3)
+println(mutableSet.getClass.getName) // scala.collection.mutable.HashSet
+
+mutableSet.add(4)
+mutableSet.remove(1)
+mutableSet += 5
+mutableSet -= 2
