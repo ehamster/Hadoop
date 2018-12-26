@@ -38,5 +38,68 @@ for:
        for( a <- 1 to 10){} //包括10
        for( a <- 1 until 10){} // 不包括10
         
-     
+     for( a <- 1 to 3; b <- 1 to 3){} // 迭代9次
+   
+ 过滤循环：
+   for( var x <- List
+      if condition1; if condition2...
+   ){
+   statement(s);
+   
+   Yield：
+     var retVal = for{ var x <- List
+     if condition1; if condition2...
+}yield x
+
+object Test {
+   def main(args: Array[String]) {
+      var a = 0;
+      val numList = List(1,2,3,4,5,6,7,8,9,10);
+
+      // for 循环
+      var retVal = for{ a <- numList 
+                        if a != 3; if a < 8
+                      }yield a
+
+      // 输出返回值
+      for( a <- retVal){
+         println( "Value of a: " + a );
+      }
+   }
+}
+
+
+在类中定义的函数就是方法
+
+class Test{
+  def m(x: Int) = x + 3    
+  val f = (x: Int) => x + 3  //函数
+}
+ def addInt( a:Int, b:Int ) : Int = {    return sum}
+ def addInt( a:Int, b:Int ) : Unit = { }  //Unit类似于 volid  
+  
+
+闭包：
+
+包通常来讲可以简单的认为是可以访问一个函数里面局部变量的另外一个函数。
+object Test {  
+   def main(args: Array[String]) {  
+      println( "muliplier(1) value = " +  multiplier(1) )  
+      println( "muliplier(2) value = " +  multiplier(2) )  
+   }  
+   var factor = 3  
+   val multiplier = (i:Int) => i * factor  
+}  
+
+String就是java里面的
+
+数组：
+ var myList = Array(1.9, 2.9, 3.4, 3.5)
       
+      // 输出所有数组元素
+      for ( x <- myList ) {
+         println( x )
+      }
+      
+      
+   
