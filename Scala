@@ -1,0 +1,42 @@
+完全的面向对象语言
+对象，类，方法，字段
+import java.awt.Color  // 引入Color
+ 
+import java.awt._  // 引入包内所有成员
+ 
+def handler(evt: event.ActionEvent) { // java.awt.event.ActionEvent
+  ...  // 因为引入了java.awt，所以可以省去前面的部分
+}
+import java.awt.{Color, Font}
+ 
+// 重命名成员
+import java.util.{HashMap => JavaHashMap}
+ 
+// 隐藏成员
+import java.util.{HashMap => _, _} // 引入了util包的所有成员，但是HashMap被隐藏了
+
+
+
+变量： var myVar : String = "Too"
+常量:  val m : Int = 3
+
+在 scala 中，对保护（Protected）成员的访问比 java 更严格一些。因为它只允许保护成员在定义了该成员的的类的子类中被访问。
+而在java中，用protected关键字修饰的成员，除了定义了该成员的类的子类可以访问，同一个包里的其他类也可以进行访问。
+
+作用域
+private[x] 
+
+或 
+
+protected[x]
+这里的x指代某个所属的包、类或单例对象。
+如果写成private[x],读作"这个成员除了对[…]中的类或[…]中的包中的类及它们的伴生对像可见外，对其它所有类都是private。
+
+IF Else = Java
+while do while = java
+for:
+       for( a <- 1 to 10){} //包括10
+       for( a <- 1 until 10){} // 不包括10
+        
+     
+      
