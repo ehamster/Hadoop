@@ -101,5 +101,27 @@ String就是java里面的
          println( x )
       }
       
+    注意使用 myList(1)  而不是myList[1]
+    
+   多维数组：
+   import Array._  
+
+    var myMatrix = ofDim[Int](3,3)
+  
+    for (i <- 0 to 2) {
+        for (j <- 0 to 2) {
+            myMatrix(i)(j) = j;
+        }
+    }
       
+   合并数组：
+     var myList1 = Array(1.9, 2.9, 3.4, 3.5)
+      var myList2 = Array(8.9, 7.9, 0.4, 1.5)
+
+      var myList3 =  concat( myList1, myList2)
+      
+      
+        var myList1 = range(10, 20, 2)//步长为2
+        
+        
    
