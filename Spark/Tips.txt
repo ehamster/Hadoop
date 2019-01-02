@@ -1,0 +1,40 @@
+1. 读取文件作为DataSet
+scala> val textFile = spark.read.textFile("README.md")
+
+2. Filter 函数   是一种 transformer
+匿名函数的一种写法，因为在scala中函数可以作argument：
+  因为这里filter的参数要求是 (Int => Boolean)
+    val x = t.filter(argument => function body)
+  
+    所以可以这么写
+    val x = t.filter(e => e%2 == 0)  #t是DataSet
+                                     #选取符合的数
+
+3. map 函数 是一种 transformer
+也是匿名函数写法
+假设map函数要求的 parameter 是(String => Int)   go from List[A] => List[B]. This is called lifting
+val s : List[String] = List("abc", "a","ab")
+val i : List[Int] = s.map(x => x.length)
+上面是最简单的写法，你也可以写成
+s.map((x : String) => x.length)
+
+或者
+
+val sl : (String => Int) = {
+  x => x.length
+}
+val i = s.map(sl)
+
+4. reduce function (op function)
+
+List( 1, 2, 3, 4 ).reduce( (x,y) => x + y )
+TextFile
+ "hello Tyth"
+ "cool example, eh?"
+ "goodbye"
+
+TextFile.map(line => line.split(" ").size)
+ 2
+ 3
+ 1
+TextFile.map(line => line.split(" ").size).reduce((a, b) => if (a > b) a else b)  
