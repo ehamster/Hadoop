@@ -142,3 +142,10 @@ mutableSet.add(4)
 mutableSet.remove(1)
 mutableSet += 5
 mutableSet -= 2
+
+匿名函数,因为在scala中函数可以作argument：
+    val x = t.filter(argument => function body)
+    因为filter的参数要求是 (Int => Boolean)
+    所以可以这么写
+    val x = t.filter(e => e%2 == 0)  #t是DataSet
+    
