@@ -60,4 +60,9 @@ t.flatMap(line => line.split(" ")).groupByKey(l=>l。substring(0,3)).count().col
 
 Caching:  重复运行的放进去跑
 
+      t.cache()   #之后跑就快了？？
+      
+      
+
+
 
