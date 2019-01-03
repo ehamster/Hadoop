@@ -1,3 +1,5 @@
+Docker： 启动container：  sudo docker run -t -i IMAGEPORT
+list变为DS scala> val ds = List("abcdef", "abcd", "cdef", "mnop").toDS
 1. 读取文件作为DataSet
 scala> val textFile = spark.read.textFile("README.md")
 
@@ -38,3 +40,24 @@ TextFile.map(line => line.split(" ").size)
  3
  1
 TextFile.map(line => line.split(" ").size).reduce((a, b) => if (a > b) a else b)  
+
+5.flatMap()
+Map transforms an RDD of length N into another RDD of length N. 
+It is similar to Map, but FlatMap allows returning 0, 1 or more elements from map function.
+
+flatMap() 
+we call flatMap to transform a Dataset of lines to a Dataset of words
+t2 = t.flatMap(line => line.split(""))
+
+
+
+6.groupByKey（）  
+t.flatMap(line => line.split(" ")).groupByKey(l=>l。substring(0,3)).count().collect()
+
+以所有words前计算所有word前三个字母为key，统计个数。
+反正就是类似的作用~~
+
+
+Caching:  重复运行的放进去跑
+
+
