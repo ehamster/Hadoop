@@ -319,4 +319,52 @@ Then a LEFT SEMI JOIN is the appropriate query to use.
 
 Order By
 
+select * from user_leads order by user_id
+Hive中的Order By达到的效果和SQL Server中是一样的，会对查询结果进行全局排序，但是Hive语句最终要转换为MapReduce程序放到Hadoop分布式集群上去执行，Order By这样的操作，肯定要在Map后汇集到一个Reduce上执行，如果结果数据量大，那就会造成Reduce执行相当漫长。
 
+所以，Hive中尽量不要用Order By，除非非常确定结果集很小。
+
+但是排序的需求总是有的，Hive中使用下面的几种排序来满足需求。
+
+Sort By
+select * from user_leads sort by user_id
+这个例子中，Sort By是在每个reduce中进行排序，是一个局部排序，可以保证每个Reduce中是按照userid进行排好序的，但是全局上来说，相同的userid可以被分配到不同的Reduce上，虽然在各个Reduce上是排好序的，但是全局上不一定是排好序的。
+
+Distribute By 和 Sort By
+--Distribute By 和Sort By实例
+select * from user_leads where user_id!='0' 
+Distribute By cast(user_id as int) Sort by cast(user_id as int);
+Distribute By 指定map输出结果怎么样划分后分配到各个Reduce上去，比如Distribute By userid，就可以保证userid字段相同的结果被分配到同一个reduce上去执行。然后再指定Sort By userid，则在Reduce上进行按照userid进行排序。
+
+但是这种还是不能做到全局排序，只能保证排序字段值相同的放在一起，并且在reduce上局部是排好序的。
+
+需要注意的是Distribute By 必须写在Sort By前面。
+
+Cluster By
+如果Distribute By和Sort By的字段是同一个，可以简写为 Cluster By.
+
+select * from user_leads where user_id!='0' 
+Cluster By cast(user_id as int) ;
+常见全局排序需求
+常见的排序需求有两种：要求最终结果是有序的、按某个字段排序后取出前N条数据。
+
+最终结果是有序的
+
+最终分析结果往往是比较小的，因为客户不太可能最终要的是一个超级大数据集。所以实现方式是先得到一个小结果集，然后在得到最终的小结果集上使用order by 进行排序。
+
+select * from (
+select user_id,count(leads_id) cnt from user_leads  
+where user_id!='0' 
+group by user_id
+) a order by a.cnt;
+这个语句让程序首先执行group by语句获取到一个小结果集，group by 过程中是不指定排序的，然后再对小结果集进行排序，这样得到的最终结果是全局排序的。
+
+取前N条
+
+select a.leads_id,a.user_name from (
+  select leads_id,user_name  from user_leads  
+distribute by length(user_name)  sort by length(user_name) desc limit 10
+ ) a order by length(a.user_name) desc limit 10;
+这个语句是查询username最长的10条记录，实现是先根据username的长度在各个Reduce上进行排序后取各自的前10个，然后再从10*N条的结果集里用order by取前10个。
+
+这个例子一定要结合MapReduce的执行原理和执行过程才能很好的理解，所以这个最能体现：看Hive语句要以MapReduce的角度看。
