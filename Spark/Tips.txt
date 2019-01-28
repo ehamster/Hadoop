@@ -63,6 +63,12 @@ Caching:  重复运行的放进去跑
       t.cache()   #之后跑就快了？？
       
       
+7.从hive里面读取数据，得到的dataframe。dataframe和rdd都可以用rdd的transformer和action
 
-
-
+val conf = new SparkConf().setAppName("SPARKHIVE").setMaster("local[*]")
+val sc = new SparkContext(conf)
+val hiveContext = new HiveContext(sc)
+var df = hiveContext.sql("select msisdn,concat_ws('|',collect_set(col1),collect_set(col2)) as values from tb_input2 
+where msisdn is not NULL group by msisdn")
+//这里collect_set是会收集全部行，想不重复可以选其他的。
+//concat_ws 类似于group_concat   用于合并多行
