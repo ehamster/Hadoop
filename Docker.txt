@@ -8,3 +8,11 @@ docker rm -v mySpark3  删除container和volume
 
 如果说docker daemon 没有running，使用这个
 service docker start
+
+docke stop xxx//停止容器
+
+挂载文件和端口的容器方式:
+
+docker run -it -v /home:/home -p 10000:10000 --rm abcd     
+-v就是把本地路径所有文件copy到容器一样的
+-p就是把某个端口开放！
