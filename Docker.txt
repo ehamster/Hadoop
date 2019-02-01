@@ -13,6 +13,6 @@ docke stop xxx//停止容器
 
 挂载文件和端口的容器方式:
 
-docker run -it -v /home:/home -p 10000:10000 --rm abcd     
+docker run -it -v /home:/home -p 10000:10000 --rm 镜像名字    
 -v就是把本地路径所有文件copy到容器一样的
 -p就是把某个端口开放！
