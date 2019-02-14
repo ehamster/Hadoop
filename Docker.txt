@@ -16,3 +16,10 @@ docke stop xxx//停止容器
 docker run -it -v /home:/home -p 10000:10000 --rm 镜像名字    
 -v就是把本地路径所有文件copy到容器一样的
 -p就是把某个端口开放！
+
+Docker创建新镜像     docker commit –m “test” –a “zmc” d8990fec2141 testimage   
+
+m是注释
+a作者
+后面是容器id
+新镜像名字
