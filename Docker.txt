@@ -13,7 +13,7 @@ docke stop xxx//停止容器
 
 挂载文件和端口的容器方式:
 
-docker run -it -v /home:/home -p 10000:10000 --rm 镜像名字    
+docker run -it -v /home:/home -p 10000:10000 --name aaa --rm -e LANG=C.UTF-8 镜像名字:v1 bash   
 -v就是把本地路径所有文件copy到容器一样的
 -p就是把某个端口开放！
 
@@ -23,3 +23,12 @@ m是注释
 a作者
 后面是容器id
 新镜像名字
+
+
+
+tmux new -s wy_nlp
+挂在后台
+
+ctrl+B D  退出来
+
+tmux a -t wy_nlp再进去
