@@ -78,3 +78,20 @@ where msisdn is not NULL group by msisdn")
 一次action就会执行所有transformation操作，所以小心不要执行多次action
 如果数据少，val processedDf = df.repartition(1).mapPartitions(sendNlp)
 加一个repartition(1)设置partition为1个，这样就不会有空partition也穿到服务端了
+
+
+
+9.将RDD存入hive  
+1)先将rDD转被为DF
+import org.apache.spark.sql.types.{StructField, StructType}
+
+import hiveContext.implicits._
+val newrdd = rdd.map(x => Row(x.val1, x.val2))
+val schemaString = "msisdn,value"
+val fields = schemaString.split(",").map(fieldName => StructField(fieldName, StringType, nullable = true))
+val schema = StructType(fields)
+var peopleDF = hiveContext.createDataFrame(newrdd, schema)
+peopleDF.show()
+createDataFrame属于sqlContext，而hiveContext继承了SqlContext
+
+2)
