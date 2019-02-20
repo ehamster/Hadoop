@@ -86,6 +86,7 @@ where msisdn is not NULL group by msisdn")
 import org.apache.spark.sql.types.{StructField, StructType}
 
 import hiveContext.implicits._
+rdd.cache() //前面的transformer操作不需要再做了，已经将rdd存在内存了
 val newrdd = rdd.map(x => Row(x.val1, x.val2))
 val schemaString = "msisdn,value"
 val fields = schemaString.split(",").map(fieldName => StructField(fieldName, StringType, nullable = true))
@@ -94,4 +95,13 @@ var peopleDF = hiveContext.createDataFrame(newrdd, schema)
 peopleDF.show()
 createDataFrame属于sqlContext，而hiveContext继承了SqlContext
 
-2)
+2)将df输出为表
+两种方法：a. peopleDF.registerTemTable("tmp_input")
+            hiveContext.sql("create table tb_input_final2 as select * from tmp_input")
+            
+            
+        b. peopleDF.write.mode(SaveMode.Append).saveAsTable("tb_input_final")
+        
+因为只有要输出内容得到数值的操作都是action,所以上面两种都会执行一边之前的transformation操作
+
+为了避免`，可以将要用到的rdd.cache()，存到内存里，就不需要执行前面的操作了
