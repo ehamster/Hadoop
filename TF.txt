@@ -1,4 +1,4 @@
-1.Twnsorboard
+1.Tensorboard
 
 from __future__ import print_function
 import tensorflow as tf
