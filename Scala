@@ -149,3 +149,20 @@ mutableSet -= 2
     所以可以这么写
     val x = t.filter(e => e%2 == 0)  #t是DataSet
     
+scala读取jar包外配置文件的方法  
+val directory = new File("")
+val filePath = directory.getAbsolutePath
+val postgprop = new Properties()
+
+val ipstream = new BufferedInputSteram(new FileInputStream(filePath + "conf/config.properties")
+postgprop.load(ipstream)
+
+在工程文件同目录新建conf/config.properties
+内容就是
+Name=value
+
+
+
+这样就能得到value
+postgprop.getProperty("Name")
+    
