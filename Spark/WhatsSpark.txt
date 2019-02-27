@@ -1,0 +1,20 @@
+1.Spark Core  
+  除了是内存管理等，还提供api for RDD
+2.Spark SQL
+  就是提供了使用SQL语言管理结构化数据
+3.Spark Streaming
+  处理实时数据
+4.MLlib
+  common machine learning function
+5.Graphx
+6.Cluster Managers
+Spark 可以运行在多种分布式上
+
+Spark Core
+1.有一个 driver program，里面有一个SparkContext
+Use SparkContext to create RDD.
+Spark将你的function传送到workNode
+使用Spark
+  1.建立SparkContext
+  val conf = new SparkConf()。set Master（"local"）.setAppName("My App") // local表示没有链接到cluster
+  val sc = new SparkContext(conf)
