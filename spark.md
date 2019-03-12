@@ -1,3 +1,8 @@
+关于Spark
+==============
+命令
+------------------
+```bash
 awk	"Aho, Weinberger and Kernigan", Bell Labs, 1970s. Interpreted programming language for text processing.
 awk -F	(see above) + Set the field separator.
 cat	Display the contents of a file at the command line, is also used to copy and or append text files into a document. Named after its function to con-cat-enate files.
@@ -48,9 +53,10 @@ vim	Is a text editor ("vi improved"). It can be used for editing any kind of tex
 wc	Print a count of lines, words and bytes for each input file ("word count")
 wc -c	Print only the number of characters.
 wc -l	Print only the number of lines.
-
+```
 
 Hadoop Distributed Files System write files
+-----------------------
 1.client request , name node validate whether you have right
 2.client requests a list of datanode to put a fraction of files
 3. client sends packet of files to closest data node
@@ -59,32 +65,35 @@ Hadoop Distributed Files System write files
 6. if one data node wrong. mark it bad and organize the pipeline again
 
 Block and replica
+--------------------------
 Block in name node contain info about replica
 replica in data node
 Replica states:
-1. Finalized: replica的写入完成了
-2.RBW : replica being written to，replica打开文件的最后一个block
+*1. Finalized: replica的写入完成了
+*2.RBW : replica being written to，replica打开文件的最后一个block
 block of file is appending : NameNode信息可能和DataNode里不match
-3.RWR：
+*3.RWR：
 RWR ： replica Waitting to be Recovered
 写入过程中datanode挂了，replica会从 RBW -> RWR，说明数据需要被恢复
-4.RUR Replica under Reconvery Replica正在恢复
-5.Temporary： 临时的replica会因为复制或者集群平衡而存在，若复制失败，所在DataNode会重启，temporary Replica被删除。
+*4.RUR Replica under Reconvery Replica正在恢复
+*5.Temporary： 临时的replica会因为复制或者集群平衡而存在，若复制失败，所在DataNode会重启，temporary Replica被删除。
 对client不可见
 
 
 Block State:
-1. Under_ Construction
-Create or reopen block, last block of the file
-2.Under_Recovery:
-file lease expire, Recovery开始后,Block: Under_contruction -> Under_Recovery
-3. Committed:
-When a client successfuly request close a file or create a new block,
+------------------
+*1. Under_ Construction
+  Create or reopen block, last block of the file
+*2.Under_Recovery:
+  file lease expire, Recovery开始后,Block: Under_contruction -> Under_Recovery
+*3. Committed:
+  When a client successfuly request close a file or create a new block,
 一些replica已经是finalized 不是所有的
-4.Complete：
-All replicas are in Finalized. All block of a file are completed. can close the file.
+*4.Complete：
+  All replicas are in Finalized. All block of a file are completed. can close the file.
 
 Recovery process
+------------------
 1.Block Recovery:
 2.Lease Recovery:
 Block Recovery是Lease Recovery一部分
@@ -99,8 +108,9 @@ NameNode 更新文件 block 元数据信息，收回该文件租约，并关闭�
 
 3.replica recovery
 4.pipeline recovery
-pipeline 写入包括三个阶段：
 
+pipeline 写入包括三个阶段：
+---------------------------
 pipeline setup：Client 发送一个写请求沿着 pipeline 传递下去，最后一个 DataNode 收到后发回一个确认消息。Client 收到确认后，pipeline 设置准备完毕，可以往里面发送数据了。
 data streaming：Client 将一个 block 拆分为多个 packet 来发送（默认一个 block 64MB，太大所以需要拆分）。Client 持续往 pipeline 发送 packet，在收到 packet ack 之前允许发送 n 个 packet，n 就是 Client 的发送窗口大小（类似 TCP 滑动窗口）。
 close：Client 在所有发出的 packet 都收到确认后发送一个 Close 请求， 
@@ -130,6 +140,7 @@ ALWAYS：总是替换
 
 
 H D F S commands
+-------------------------
 1.hdfs dfs -help
 2.hdfs dfs -usage<name>
 3.hdfs dfs -du -h /data/wiki  查看file大小和所有replica消耗大小
