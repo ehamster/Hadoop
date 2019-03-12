@@ -58,8 +58,8 @@ wc -l	Print only the number of lines.
 Hadoop Distributed Files System write files
 -----------------------
 ```bash
-1.client request , name node validate whether you have right
-2.client requests a list of datanode to put a fraction of files
+1. client request , name node validate whether you have right
+2. client requests a list of datanode to put a fraction of files
 3. client sends packet of files to closest data node
 4. later data node on the pipeline will transfer copy of the packet
 5. the packet stores in all datanode, data node send acknowledge packet back
@@ -71,14 +71,14 @@ Block and replica
 Block in name node contain info about replica
 replica in data node
 Replica states:
-* 1. Finalized: replica的写入完成了
-* 2.RBW : replica being written to，replica打开文件的最后一个block
+1. Finalized: replica的写入完成了
+2.RBW : replica being written to，replica打开文件的最后一个block
 block of file is appending : NameNode信息可能和DataNode里不match
-* 3.RWR：
+3.RWR：
 RWR ： replica Waitting to be Recovered
 写入过程中datanode挂了，replica会从 RBW -> RWR，说明数据需要被恢复
-* 4.RUR Replica under Reconvery Replica正在恢复
-* 5.Temporary： 临时的replica会因为复制或者集群平衡而存在，若复制失败，所在DataNode会重启，temporary Replica被删除。
+4.RUR Replica under Reconvery Replica正在恢复
+5.Temporary： 临时的replica会因为复制或者集群平衡而存在，若复制失败，所在DataNode会重启，temporary Replica被删除。
 对client不可见
 ```
 
@@ -96,6 +96,7 @@ Block State:
 
 Recovery process
 ------------------
+```bash
 1.Block Recovery:
 2.Lease Recovery:
 Block Recovery是Lease Recovery一部分
@@ -110,9 +111,10 @@ NameNode 更新文件 block 元数据信息，收回该文件租约，并关闭�
 
 3.replica recovery
 4.pipeline recovery
-
+```
 pipeline 写入包括三个阶段：
 ---------------------------
+```bash
 pipeline setup：Client 发送一个写请求沿着 pipeline 传递下去，最后一个 DataNode 收到后发回一个确认消息。Client 收到确认后，pipeline 设置准备完毕，可以往里面发送数据了。
 data streaming：Client 将一个 block 拆分为多个 packet 来发送（默认一个 block 64MB，太大所以需要拆分）。Client 持续往 pipeline 发送 packet，在收到 packet ack 之前允许发送 n 个 packet，n 就是 Client 的发送窗口大小（类似 TCP 滑动窗口）。
 close：Client 在所有发出的 packet 都收到确认后发送一个 Close 请求， 
@@ -139,10 +141,11 @@ NEVER：从不替换，针对 Client 的行为
 DISABLE：禁止替换，DataNode 服务端抛出异常，表现行为类似 Client 的 NEVER 策略
 DEFAULT：默认根据副本数要求来决定，简单来说若配置的副本数为 3，如果坏了 2 个 DataNode，则会替换，否则不替换
 ALWAYS：总是替换
-
+```
 
 H D F S commands
 -------------------------
+```bash
 1.hdfs dfs -help
 2.hdfs dfs -usage<name>
 3.hdfs dfs -du -h /data/wiki  查看file大小和所有replica消耗大小
@@ -161,3 +164,4 @@ hdfs dfs -cat a.txt | tail -4
 hdfs dfs -setrep -w 1 a.txt  /复制一次
 14.hdfs fsck /data/wiki -files -blocks -locations
 15.hdfs dfs -find /data/wiki -name "*part*"
+```
