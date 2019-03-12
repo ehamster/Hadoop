@@ -1,5 +1,6 @@
 1.Tensorboard
-
+---------------
+```python
 from __future__ import print_function
 import tensorflow as tf
 import os
@@ -21,38 +22,41 @@ with tf.Session() as sess:
 # Closing the writer.
 writer.close()
 sess.close()
-
+```
 
 The Tensorboard can be run as follows in the terminal:
+--------------------
 
 tensorboard --logdir="absolute/path/to/log_dir"
 
 2.
+----------------
+```python
   x = tf.add(a,b,name = 'add')
   with tf.Session() as sess:
     print(sess.run(x))
-    
+```
     
 3.Variables
-
+----------------
 先define再initialize才行
-
+```python
 import tensorflow as tf
 from tensorflow.python.framework import ops
 
 weights = tf.Variable(tf.random_normal([2,3], stddev = 0.1), name = "weights")
 biases = tf.Variable(tf.zeros([3]),name = "biases")
 
-  1）initial特定的variable：
+  #1）initial特定的variable：
        variable_c = [weights, biases]
        init_all_op = tf.variables_initializer(var_list = variable_c)
        
-  2)initial所有variables:
+  #2)initial所有variables:
        init_all_op = tf.global_variables_initializer()
        
        
-  3)利用已经存在的变量
+  #3)利用已经存在的变量
   wNew = tf.Variable(weights.initialized_value(), name = "wNew")
   init_weightsNew+op = tf.variables_initializer(var_list = [wNew])
-
+```
 
