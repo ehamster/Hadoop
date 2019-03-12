@@ -57,39 +57,41 @@ wc -l	Print only the number of lines.
 
 Hadoop Distributed Files System write files
 -----------------------
+```bash
 1.client request , name node validate whether you have right
 2.client requests a list of datanode to put a fraction of files
 3. client sends packet of files to closest data node
 4. later data node on the pipeline will transfer copy of the packet
 5. the packet stores in all datanode, data node send acknowledge packet back
 6. if one data node wrong. mark it bad and organize the pipeline again
-
+```
 Block and replica
 --------------------------
+```bash
 Block in name node contain info about replica
 replica in data node
 Replica states:
-*1. Finalized: replica的写入完成了
-*2.RBW : replica being written to，replica打开文件的最后一个block
+* 1. Finalized: replica的写入完成了
+* 2.RBW : replica being written to，replica打开文件的最后一个block
 block of file is appending : NameNode信息可能和DataNode里不match
-*3.RWR：
+* 3.RWR：
 RWR ： replica Waitting to be Recovered
 写入过程中datanode挂了，replica会从 RBW -> RWR，说明数据需要被恢复
-*4.RUR Replica under Reconvery Replica正在恢复
-*5.Temporary： 临时的replica会因为复制或者集群平衡而存在，若复制失败，所在DataNode会重启，temporary Replica被删除。
+* 4.RUR Replica under Reconvery Replica正在恢复
+* 5.Temporary： 临时的replica会因为复制或者集群平衡而存在，若复制失败，所在DataNode会重启，temporary Replica被删除。
 对client不可见
-
+```
 
 Block State:
 ------------------
-*1. Under_ Construction
+* 1. Under_ Construction
   Create or reopen block, last block of the file
-*2.Under_Recovery:
+* 2.Under_Recovery:
   file lease expire, Recovery开始后,Block: Under_contruction -> Under_Recovery
-*3. Committed:
+* 3. Committed:
   When a client successfuly request close a file or create a new block,
 一些replica已经是finalized 不是所有的
-*4.Complete：
+* 4.Complete：
   All replicas are in Finalized. All block of a file are completed. can close the file.
 
 Recovery process
