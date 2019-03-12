@@ -1,3 +1,5 @@
+Docker常用命令
+=======================
 docker ps -a #查看当前容器
 docker run -it --name mySpark docker.io/centos   #先创建并进入一个新的被命名为mySpark的新容器
 Ctrl + P + Q 退出容器保持后台运行（按住ctrl和P 再按Q），再用 docker ps 进行查看：  exit可以直接退出容器
