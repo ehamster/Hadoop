@@ -1,5 +1,7 @@
-
+Hive基础操作
+==============================
 创建 DB
+-----------------------
 CREATE DATABASE [IF NOT EXISTS] userdb;
 
 CREATE SCHEMA userdb;
@@ -7,13 +9,16 @@ CREATE SCHEMA userdb;
 SHOW DATABASES;
 
 删除DB
+------------------------
 DROP database if exists userdb cascade;  //加casade后db有表也会删除
 
 使用某一个db
+------------------------
 use userdb;
 
 创建普通表：
-
+-----------------------
+```bash
 create table if not exists userinfo
 (
 	userid int,
@@ -26,9 +31,9 @@ stored as textfile;
 
 //row format delimited fields terminated by '\t' 是指定列之间的分隔符
 //stored as textfile是指定文件存储格式为textfile。
-
+```
 创建表一般有几种方式：
-
+-------------------------
 create table 方式：以上例子中的方式。
 
 create table as select 方式：根据查询的结果自动创建表，并将查询结果数据插入新建的表中。
@@ -37,6 +42,7 @@ create table like tablename1 方式：是克隆表，只复制tablename1表的�
 
 
 外部表：
+------------------------------
 外部表是没有被hive完全控制的表，当表删除后，数据不会被删除。
 
 hive> create external table iislog_ext (
@@ -46,11 +52,13 @@ hive> create external table iislog_ext (
     > ;
 
 创建分区表：
+------------------------
 Hive查询一般是扫描整个目录，但是有时候我们关心的数据只是集中在某一部分数据上，比如我们一个Hive查询，往往是只是查询某一天的数据，这样的情况下，可以使用分区表来优化，一天是一个分区，查询时候，Hive只扫描指定天分区的数据。
 
 普通表和分区表的区别在于：一个Hive表在HDFS上是有一个对应的目录来存储数据，普通表的数据直接存储在这个目录下，而分区表数据存储时，是再划分子目录来存储的。一个分区一个子目录。主要作用是来优化查询性能。
 
 --创建经销商操作日志表
+```bash
 create table user_action_log
 (
 companyId INT comment   '公司ID',
@@ -67,14 +75,17 @@ timestamp STRING comment   '访问时间戳'
 partitioned by (dt string)
 row format delimited fields terminated by ','
 stored as textfile;
+```
 这个例子中，这个日志表以dt字段分区，dt是个虚拟的字段，dt下并不存储数据，而是用来分区的，实际数据存储时，dt字段值相同的数据存入同一个子目录中，插入数据或者导入数据时，同一天的数据dt字段赋值一样，这样就实现了数据按dt日期分区存储。
 
 当Hive查询数据时，如果指定了dt筛选条件，那么只需要到对应的分区下去检索数据即可，大大提高了效率。所以对于分区表查询时，尽量添加上分区字段的筛选条件。
 
 创建桶表
+------------------------
 桶表也是一种用于优化查询而设计的表类型。创建通表时，指定桶的个数、分桶的依据字段，hive就可以自动将数据分桶存储。查询时只需要遍历一个桶里的数据，或者遍历部分桶，这样就提高了查询效率。举例：
 
 ------创建订单表
+```bash
 create table user_leads
 (
 leads_id string,
@@ -86,6 +97,7 @@ create_time string
 clustered by (user_id) sorted by(leads_id) into 10 buckets 
 row format delimited fields terminated by '\t' 
 stored as textfile;
+```
 对这个例子的说明：
 
 clustered by是指根据userid的值进行哈希后模除分桶个数，根据得到的结果，确定这行数据分入哪个桶中，这样的分法，可以确保相同userid的数据放入同一个桶中。而经销商的订单数据，大部分是根据user_id进行查询的。这样大部分情况下是只需要查询一个桶中的数据就可以了。
@@ -98,6 +110,7 @@ into 10 buckets是指定一共分10个桶。
 
 
 查询表：
+---------------
 --查询库中表
 show tables;
 Show TABLES '*info';  --可以用正则表达式筛选要列出的表
@@ -126,6 +139,7 @@ drop table if exists user_info
 
 
 加载到普通表
+-----------------------
 
 可以将本地文本文件内容批量加载到Hive表中，要求文本文件中的格式和Hive表的定义一致，包括：字段个数、字段顺序、列分隔符都要一致。
 
@@ -166,6 +180,7 @@ set hive.enforce.bucketing = true; 这个配置非常关键，为true就是设�
 
 
 导出数据
+-----------------
  --导出数据，是将hive表中的数据导出到本地文件中。
 insert overwrite local directory '/home/hadoop/user_info.bak2016-08-22 '
 select * from user_info;
@@ -198,6 +213,7 @@ insert overwrite table log2 select companyid,originalstring  where companyid='10
 
 
 复制表
+------------------
 复制表是将源表的结构和数据复制并创建为一个新表，复制过程中，可以对数据进行筛选，列可以进行删减。
 
 create table user_leads_bak
@@ -210,12 +226,14 @@ where create_time<'2016-08-22';
 上面这个例子是对user_leads表进行复制备份，复制时筛选了2016-08-22以前的数据，减少几个列，并添加了一个bakdate列。
 
 克隆表
+---------------------
 克隆表时会克隆源表的所有元数据信息，但是不会复制源表的数据。
 
 --克隆表user_leads，创建新表user_leads_like
 create table user_leads_like like  user_leads;
 
 备份表
+--------------
 备份是将表的元数据和数据都导出到HDFS上。
 
 export table user_action_log partition (dt='2016-08-19')
@@ -223,15 +241,16 @@ to '/user/hive/action_log.export'
 这个例子是将useractionlog表中的一个分区，备份到HDFS上，to后面的路径是HDFS上的路径。
 
 还原表
+-------------
 将备份在HDFS上的文件，还原到useractionlog_like表中。
 
 import table user_action_log_like from '/user/hive/action_log.export';
 
 
 HQL语法
-
+===================
 函数列
-
+---------------------
 select companyid,upper(host),UUID(32) from user_action_log;
 
 可以使用hive自带的函数，也可以是使用用户自定义函数。
@@ -254,6 +273,8 @@ Case When Then语句
 select case when userid < 9 then '未登录' else userid end from user_info;
 
 Where筛选
+-----------------
+```bash
 操作符	说明	操作符	说明
 A=B	A等于B就返回true，适用于各种基本类型	A<=>B	都为Null则返回True，其他和=一样
 A<>B	不等于	A!=B	不等于
@@ -263,10 +284,11 @@ A Between B And C	筛选A的值处于B和C之间	A Not Between B And C	筛选A�
 A Is NULL	筛选A是NULL的	A Is Not NULL	筛选A值不是NULL的
 A Like B	%一个或者多个字符_一个字符	A Not Like B	%一个或者多个字符_一个字符
 A RLike B	正则匹配
-
+```
 
 
 Group By 分组
+---------------
 Hive不支持having语句，有对group by 后的结果进行筛选的需求，可以先将筛选条件放入group by的结果中，然后在包一层，在外边对条件进行筛选。
 
 如果需要进行如下查询：
@@ -318,7 +340,7 @@ Then a LEFT SEMI JOIN is the appropriate query to use.
 
 
 Order By
-
+----------------	
 select * from user_leads order by user_id
 Hive中的Order By达到的效果和SQL Server中是一样的，会对查询结果进行全局排序，但是Hive语句最终要转换为MapReduce程序放到Hadoop分布式集群上去执行，Order By这样的操作，肯定要在Map后汇集到一个Reduce上执行，如果结果数据量大，那就会造成Reduce执行相当漫长。
 
