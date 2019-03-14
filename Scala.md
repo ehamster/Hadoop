@@ -42,6 +42,8 @@ for:
      for( a <- 1 to 3; b <- 1 to 3){} // 迭代9次
    
  过滤循环：
+ -----------------
+ ```bash
    for( var x <- List
       if condition1; if condition2...
    ){
@@ -68,7 +70,7 @@ object Test {
       }
    }
 }
-
+```
 
 在类中定义的函数就是方法
 ----------------
@@ -118,6 +120,7 @@ String就是java里面的
     }
       
    合并数组：
+   ------
      var myList1 = Array(1.9, 2.9, 3.4, 3.5)
       var myList2 = Array(8.9, 7.9, 0.4, 1.5)
 
@@ -147,6 +150,7 @@ mutableSet += 5
 mutableSet -= 2
 
 匿名函数,因为在scala中函数可以作argument：
+----------
     val x = t.filter(argument => function body)
     因为filter的参数要求是 (Int => Boolean)
     所以可以这么写
