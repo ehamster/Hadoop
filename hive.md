@@ -2,12 +2,13 @@ Hive基础操作
 ==============================
 创建 DB
 -----------------------
+```bash
 CREATE DATABASE [IF NOT EXISTS] userdb;
 
 CREATE SCHEMA userdb;
 
 SHOW DATABASES;
-
+```
 删除DB
 ------------------------
 DROP database if exists userdb cascade;  //加casade后db有表也会删除
@@ -111,7 +112,8 @@ into 10 buckets是指定一共分10个桶。
 
 查询表：
 ---------------
---查询库中表
+查询库中表
+```bash
 show tables;
 Show TABLES '*info';  --可以用正则表达式筛选要列出的表
 describe userinfo; -- 查看表定义
