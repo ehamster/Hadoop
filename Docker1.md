@@ -27,7 +27,9 @@ docke stop xxx//停止容器
 
 Docker创建新镜像     docker commit –m “test” –a “zmc” d8990fec2141 testimage  
 Docker保存镜像到本地  docker save -o /home/wy/a.tar 镜像名字
+
 压缩镜像    tar -czf a.tar.gz a.tar
+载入镜像    docker load --input a.tar
 
 m是注释
 a作者
