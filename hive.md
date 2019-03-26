@@ -392,3 +392,15 @@ distribute by length(user_name)  sort by length(user_name) desc limit 10
 这个语句是查询username最长的10条记录，实现是先根据username的长度在各个Reduce上进行排序后取各自的前10个，然后再从10*N条的结果集里用order by取前10个。
 
 这个例子一定要结合MapReduce的执行原理和执行过程才能很好的理解，所以这个最能体现：看Hive语句要以MapReduce的角度看。
+
+hive到hdfs
+`````
+把表格保存到hdfs
+insert overwrite directory '/data/sms'
+select * from sms;
+从hdfs下载到本地
+hdfs dfs -get /data/s /homr/s
+读取表格从hdfs
+load data inpath '/data/s.txt' into table sms
+
+
