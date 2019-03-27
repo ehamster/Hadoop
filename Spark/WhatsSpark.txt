@@ -18,3 +18,16 @@ Spark将你的function传送到workNode
   1.建立SparkContext
   val conf = new SparkConf()。set Master（"local"）.setAppName("My App") // local表示没有链接到cluster
   val sc = new SparkContext(conf)
+spark RDD
+
+两种操作  transformation action
+
+transformation是 lazy 的 不会立刻执行， 直到action操作才会执行
+为了不重复执行， 可以a.persist
+流程是
+1.创建rdd
+2.transformation
+3.persist
+4.action
+
+一般读取用sc.textFile("/data/2.md")
