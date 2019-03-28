@@ -105,3 +105,16 @@ createDataFrame属于sqlContext，而hiveContext继承了SqlContext
 因为只有要输出内容得到数值的操作都是action,所以上面两种都会执行一边之前的transformation操作
 
 为了避免`，可以将要用到的rdd.cache()，存到内存里，就不需要执行前面的操作了
+
+关于spark join 表格
+
+1.读取两个表
+var df = hiveContext.sql("select * from tb1")
+2.join
+var result = df.join(df2, df("numbers")=== df2("n"), "left_outer")
+3.去重复列
+result = result.drop(df2("n"))
+
+4.如果是想合并列的话
+val separator = ","
+result.select(df("numbers",concat_ws(separator, df("value"), df2("value")).cast(StringType).as("values")).show()
