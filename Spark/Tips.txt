@@ -112,7 +112,7 @@ createDataFrame属于sqlContext，而hiveContext继承了SqlContext
 var df = hiveContext.sql("select * from tb1")
 2.join先广播小表
 val df2 = sc.broadcast(df2).value
-var result = df.join(df2, df("numbers")=== df2("n"), "left_outer")
+var result = df.join(df2, df("numbers")=== df2("n"))
 3.去重复列
 result = result.drop(df2("n"))
 
