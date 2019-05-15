@@ -119,3 +119,11 @@ result = result.drop(df2("n"))
 4.如果是想合并列的话
 val separator = ","
 result.select(df("numbers",concat_ws(separator, df("value"), df2("value")).cast(StringType).as("values")).show()
+
+
+关于spark资源问题
+----
+
+1.partition数量最好是 num_exectors和executor_cores的倍数
+因为两个变量乘等于能同时处理的分区数量，为了不浪费资源，最好是倍数关系
+
