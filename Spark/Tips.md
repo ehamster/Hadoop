@@ -127,3 +127,7 @@ result.select(df("numbers",concat_ws(separator, df("value"), df2("value")).cast(
 1.partition数量最好是 num_exectors和executor_cores的倍数
 因为两个变量乘等于能同时处理的分区数量，为了不浪费资源，最好是倍数关系
 
+2. 可以先用这个查看表的大小
+show create table
+取得地址然后查看大小
+hadoop fs -du -s -h /user/hive/warehouse/
