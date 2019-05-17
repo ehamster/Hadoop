@@ -403,4 +403,7 @@ hdfs dfs -get /data/s /homr/s
 读取表格从hdfs
 load data inpath '/data/s.txt' into table sms
 
+时间戳转int
+-----
 
+select unix_timestamp(sd_time) from tb where unix_timestamp(sd_time)<=
