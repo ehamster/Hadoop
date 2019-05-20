@@ -406,4 +406,4 @@ load data inpath '/data/s.txt' into table sms
 时间戳转int
 -----
 
-select unix_timestamp(sd_time) from tb where unix_timestamp(sd_time)<=
+select unix_timestamp(sd_time) from tb where unix_timestamp(sd_time)<=unix_stamp("2018-02-01")
