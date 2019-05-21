@@ -411,4 +411,7 @@ select unix_timestamp(sd_time) from tb where unix_timestamp(sd_time)<=unix_stamp
 拼接两个接两个
 select a from tb union all select b from tb
 
-查询不在
+查询不在不要用 not in会有问题
+
+selecr tba.a from tba where not exists 
+(select tbb.b from tbb where tbb.b=tba.a )
