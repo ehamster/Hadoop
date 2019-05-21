@@ -403,6 +403,13 @@ hdfs dfs -get /data/s /homr/s
 读取表格从hdfs
 load data inpath '/data/s.txt' into table sms
 
+第二种表格导出方法
+先把表变为/t分割的textfile格式
+show create table tb
+获得location
+在外面，hadoop fs -get 路径
+cat 文件夹 /* > a.txt
+
 时间戳转int
 -----
 
