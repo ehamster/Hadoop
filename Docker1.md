@@ -43,3 +43,62 @@ tmux new -s wy_nlp
 ctrl+B D  退出来
 
 tmux a -t wy_nlp再进去
+
+
+Docker课程学习笔记
+===================
+```bash
+1.虚拟机是硬件抽象，从主机获取cpuram
+2.容器是应用程序抽象
+
+docker image pull xxxxx   默认从dockerstore下载镜像
+
+docker container run imagename ls -l  创建xxx的容器然后运行 ls -l 然后退出
+
+docker container run -it imagename /bin/bash   就是进入容器了
+docker container ls  = docker ps
+docker container ls -a  能看到已经退出的容器
+docker container start container ID  ---------启动已经退出的container
+
+
+docker container diff contain ID   --------查看在容器中添加或者更改
+docker container commit contain ID -----创建镜像
+docker image tag image ID myname ------添加名字
+
+
+
+```
+
+使用DockerFile创建镜像
+------------------
+
+```bash
+DockerFile是docker创建镜像说明，所有此镜像容器都会执行docker file而里面的命令
+FROM alpine  ----基础镜像
+RUN apk update && apk add nodejs ---运行命令
+COPY ./app  ------从当前目录复制到工作目录
+WORKDIR /app   ----指定工作路径，容器启动时使用这个
+CMD []
+
+```
+
+层
+-----------
+
+```bash
+docker image history image ID
+可以观察创建镜像的时候用了哪些层，镜像其实是很多层组成的，上面的底层就是alpine
+在index.js添加一行之后，再构建一个镜像，会发现docker构建前面相同层的时候直接使用的缓存
+
+docker image inspect image id 可以查看镜像内部层
+卷：docker容器层，允许数据持久化
+
+```
+
+swarm集群模式
+--------------------
+
+```bash
+
+
+```
