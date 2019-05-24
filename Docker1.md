@@ -74,12 +74,15 @@ docker image tag image ID myname ------添加名字
 
 ```bash
 DockerFile是docker创建镜像说明，所有此镜像容器都会执行docker file而里面的命令
+在一个叫Dockerfile文件里写：
 FROM alpine  ----基础镜像
 RUN apk update && apk add nodejs ---运行命令
 COPY ./app  ------从当前目录复制到工作目录
 WORKDIR /app   ----指定工作路径，容器启动时使用这个
-CMD []
+CMD ["node","index.js"]
 
+然后创建镜像：
+docker image build -t hello:v1
 ```
 
 层
