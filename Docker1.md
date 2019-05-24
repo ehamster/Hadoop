@@ -99,6 +99,21 @@ swarm集群模式
 --------------------
 
 ```bash
+实际使用需要3个以上manager和多个worker，这里只用一个演示，manager也可以是worker
+docker swarm init --advertise-addr $(hostname -i)
 
+之后根据提示添加worker
+docker node ls ------------查看所有节点
+多个manager中有一个是leader节点
+
+部署 STACK：  stack包含多个服务
+  写好配置文件docker-stack.yml,定义整个stack。services里面有很多服务组件，
+  replicas表示该服务的实例数量
+  
+  执行docker stackdeploy --compose-file=docker-stack.yml stackname
+  docker stack ls -------查看当前stack
+  dockers stack services stackname -----查看每个服务
+  docker service ps service_name  ---查看服务的任务
+  
 
 ```
