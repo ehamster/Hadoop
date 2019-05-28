@@ -30,6 +30,7 @@ kubeadm init --apiserver-advertise-address $(hostname -i) --kubernetes-version=v
 部署APP
 ==================
 步骤：
+---------------------
   1.创建deployment配置，之后master会将应用程序实例分发到各个节点
   2.Kubenetes Deployment Controller会监视实例，节点故障的话，控制器会替换它。
 
@@ -79,7 +80,9 @@ kubectl describe pods  --查看所有pod使用的镜像和ip等等
 =================
 
 1.同一个node上的pod ip不一样。节点死亡，pod死亡。ReplicationController可以创建新的pod来将APP维持住
+---------------
 2.Service:定义一组pods和访问策略，可以使用yaml或json定义service
+---------------
   1)ClusterIP（默认）只能集群内部访问
   2)NodePort 外部可访问
   3)LoadBalancer
@@ -87,8 +90,10 @@ kubectl describe pods  --查看所有pod使用的镜像和ip等等
 service指定了pod的ip是否可以被看见
 
 3.Service使用label和selectors匹配一组pods,也就是使用label可以找到对应的pods
+--------------------
 
 4.新建service并让外部可以访问app：
+--------------
   1）kubectl expose deployment/nginx --type="NodePort" --port 80 ----新建service
   2）再查看服务就能发现有新的service了
   kubectl get service
@@ -101,6 +106,7 @@ service指定了pod的ip是否可以被看见
   curl localhost:$NODE_PORT
   
 5.如何使用label
+----------------
  deployment自动为pod创建了label：使用这个查看
  kubectl describe deployment 获取label值 run=nginx
  
@@ -111,10 +117,12 @@ service指定了pod的ip是否可以被看见
   kubectl label pod $POD_NAME app=v1
   
  6.删除服务
+ -----------------
   kubectl delete service -l run=nginx
   服务删除后，仍然可以通过 pod ip访问容器里面的app
   
  7.清除工作环境
+ ----------------
   kubectl delete deployment nginx
   
 扩展缩放APP
@@ -122,19 +130,25 @@ service指定了pod的ip是否可以被看见
 
 运动多个APP实例在多个Pods，需要使用service管理
 1.新建deployment
+--------------
 kubectl run deploymentname --image=imageName --port=8080 --image-pull-policy=IfNotPresent (内网)
 2.创建service以便以后验证
+-----------------
 kubectl expose deployment/deploymentName --type='NodePort' --port 8080 暴露IP让外部可以访问
 export NODE_PORT = $.....
 echo NODE_....
 
 3.扩充为4个实例
+-----------------
   kubectl scale deployments/kubernetes-bootcamp --replicas=4
   
 4. 查看
+-----------------------
+
 curl localhost:$NODE_PORT  可以发现名字pod名字不一样
 
 5.减小为2
+---------------------
 kubectl scale deployments/kubernetes-bootcamp --relicas=2
 
 滚动更新App
@@ -142,14 +156,19 @@ kubectl scale deployments/kubernetes-bootcamp --relicas=2
 
 保持APP可用的同时更新版本,所以需要缩放pods!!!而且可以还原为原始版本
 1.下载镜像
+------------------------
 
-2.kubectl set image deployments/deploymentName deploymentName=xxxxx:v2
+2.更新镜像
+--------------------------
+kubectl set image deployments/deploymentName deploymentName=xxxxx:v2
 
 3.暴露ip查看是否更新同上
+-----------------------
 或者查看当前pod版本
 kubectl describe pods
 
 4.升级失败如何回滚？
+---------------------
 
  kubectl rollout undo deployments/deployment_name
 
