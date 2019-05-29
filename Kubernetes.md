@@ -81,6 +81,7 @@ kubectl describe pods  --查看所有pod使用的镜像和ip等等
 
 1.同一个node上的pod ip不一样。节点死亡，pod死亡。ReplicationController可以创建新的pod来将APP维持住
 ---------------
+
 2.Service:定义一组pods和访问策略，可以使用yaml或json定义service
 ---------------
   1)ClusterIP（默认）只能集群内部访问
@@ -89,11 +90,14 @@ kubectl describe pods  --查看所有pod使用的镜像和ip等等
   4)ExternalName
 service指定了pod的ip是否可以被看见
 
-3.Service使用label和selectors匹配一组pods,也就是使用label可以找到对应的pods
+3.Service使用label和selectors匹配一组pods
 --------------------
+
+也就是使用label可以找到对应的pods
 
 4.新建service并让外部可以访问app：
 --------------
+```bash
   1）kubectl expose deployment/nginx --type="NodePort" --port 80 ----新建service
   2）再查看服务就能发现有新的service了
   kubectl get service
@@ -104,7 +108,7 @@ service指定了pod的ip是否可以被看见
   
   4)访问
   curl localhost:$NODE_PORT
-  
+  ```
 5.如何使用label
 ----------------
  deployment自动为pod创建了label：使用这个查看
@@ -131,9 +135,12 @@ service指定了pod的ip是否可以被看见
 运动多个APP实例在多个Pods，需要使用service管理
 1.新建deployment
 --------------
+
 kubectl run deploymentname --image=imageName --port=8080 --image-pull-policy=IfNotPresent (内网)
+
 2.创建service以便以后验证
 -----------------
+
 kubectl expose deployment/deploymentName --type='NodePort' --port 8080 暴露IP让外部可以访问
 export NODE_PORT = $.....
 echo NODE_....
@@ -171,4 +178,36 @@ kubectl describe pods
 ---------------------
 
  kubectl rollout undo deployments/deployment_name
+ 
+ Kubernetes多点集群
+ =======================
+ 
+ 1.Initial
+ 2.设置让master也最为工作节点(也可以不设置)
+ 这时候使用kubectl get nodes 可以发现只有一个节点
+ 3.使用初始化出现的加入语句加入新节点
+ 4.这时候kubectl get nodes 就发现两个节点
+ 
+ 节点联网
+ ===============
+ 
+ 多节点之间联通使用的是CNI方式，有很多种
+ weavenet,calico,contiv,openvswitch
+ 上面用的是weavenet，这里我们用calico
+ 
+ 1.下载镜像
+ 2.激活网络模型
+ kubectlapply -f http://......yaml
+ 3.检查pod是否就绪
+ kubectl get pods --all-namespaces
+ 必须使用这一条命令，否则看不到网络模型的pods
+ 
+ 4.新建depoyment
+ kubectl run .....
+ kubectl scale deployments/nginx --reeplicas=4 扩充实例为4
+ 
+ 5.查看各个节点上实例有多少,发现是随机分配的
+ docker ps | grep -i nginx
+ 
+ 
 
