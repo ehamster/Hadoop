@@ -175,7 +175,8 @@ scala
 
 2.根据list过滤dataframe
 df=df.filter(df.col("home").isin(alist:_*))
-
+如果要实现not in.加感叹号
+df=df.filter(!df.col("home").isin(alist:_*))
 3.合并df,他只是按照列的顺序，不管列名一不一样
 
 df=df.unionAll(df2)
