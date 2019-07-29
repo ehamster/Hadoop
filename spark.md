@@ -168,7 +168,7 @@ hdfs dfs -setrep -w 1 a.txt  /复制一次
 
 scala
 –––––
-'''bash
+```bash
 1.string.strip
 
 等于scala的 s.trim()
@@ -180,4 +180,5 @@ df=df.filter(df.col("home").isin(alist:_*))
 
 df=df.unionAll(df2)
 
-'''
+
+```
