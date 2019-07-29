@@ -165,3 +165,19 @@ hdfs dfs -setrep -w 1 a.txt  /复制一次
 14.hdfs fsck /data/wiki -files -blocks -locations
 15.hdfs dfs -find /data/wiki -name "*part*"
 ```
+
+scala
+–––––
+'''bash
+1.string.strip
+
+等于scala的 s.trim()
+
+2.根据list过滤dataframe
+df=df.filter(df.col("home").isin(alist:_*))
+
+3.合并df,他只是按照列的顺序，不管列名一不一样
+
+df=df.unionAll(df2)
+
+'''
