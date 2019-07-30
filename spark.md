@@ -181,5 +181,7 @@ df=df.filter(!df.col("home").isin(alist:_*))
 
 df=df.unionAll(df2)
 
+4.查看进度
 
+yarn application -list
 ```
