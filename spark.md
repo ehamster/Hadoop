@@ -202,3 +202,5 @@ df=df.drop("a").withColumnRenamed("b","a")
 val column:Array[String] = df.columns
 val reorder:Array[String] = Array("a","c","b")
 df = df.select(reorder.head,reorder.tail:_*)
+
+9.spark-shell --master yarn
