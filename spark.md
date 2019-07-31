@@ -185,3 +185,20 @@ df=df.unionAll(df2)
 
 yarn application -list
 ```
+
+5.写出成分区表
+不要用saveastable和它生成的表
+用这个,先人工建表。
+df.write.partitionBy("cp","ld").insertInto("tb")
+
+6.时间戳转日期
+
+df=df.withColumn("a",from_unixtime(df("a"),"yyyy–MM–dd HH:mm:ss"))
+
+7.column重命名
+df=df.drop("a").withColumnRenamed("b","a")
+
+8.改变列的顺序
+val column:Array[String] = df.columns
+val reorder:Array[String] = Array("a","c","b")
+df = df.select(reorder.head,reorder.tail:_*)
