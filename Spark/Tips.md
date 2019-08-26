@@ -123,6 +123,8 @@ result.select(df("numbers",concat_ws(separator, df("value"), df2("value")).cast(
 
 关于spark资源问题
 ----
+```bash
+0.默认情况下，yarn 可分配核 = 机器核 x 1.5，yarn 可分配内存 = 机器内存 x 0.8
 
 1.partition数量最好是 num_exectors和executor_cores的倍数
 因为两个变量乘等于能同时处理的分区数量，为了不浪费资源，最好是倍数关系
@@ -131,3 +133,17 @@ result.select(df("numbers",concat_ws(separator, df("value"), df2("value")).cast(
 show create table
 取得地址然后查看大小
 hadoop fs -du -s -h /user/hive/warehouse/
+ 
+3.各种参数
+2种模式： yarn-client用于调试  yarn-cluster用于生产环境
+项目提交的机器和worker是物理连接的时候用client
+远程连接的时候用cluster
+区别在于driver运行的位置，是和spark-submit那个在一起还是在cluster里
+
+driver-memory - driver使用的内存
+num-executors - 创建多少个executors
+executor-memory - 单个executor最大内存
+executor-cores - 各个 executor 使用的并发线程数目，也即每个 executor 最大可并发执行的 Task 数目
+
+
+```
