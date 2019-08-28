@@ -42,6 +42,7 @@
   发现再dev修改的内容没有了，因为还没同步到master
 4.同步回master
   git merge dev - 将dev同步到当前分支(master)
+4.1如果发现合并失败，去看失败的文件，里面写了不同版本的冲突，修改后提交就好了
 5.删除分支dev
   git branch -d dev
 ```
