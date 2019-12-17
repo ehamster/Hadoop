@@ -3,6 +3,10 @@ Docker常用命令
 基本
 -----------------------
 ```bash
+旧版本容器使用gpu:
+docker run --runtime=nvidia ....
+新版本使用gpu:
+docker --gpu all
 docker ps -a #查看当前容器
 docker run -it -v /home:/home -p 10000:10000 --name aaa --rm -e LANG=C.UTF-8 镜像名字:v1 bash
 ```
