@@ -1,3 +1,38 @@
+1.镜像spark1.5 hadoop2.7.7 jdk 1.8 centos 7 hive 1.2.2 hbase 2.1 使用方法
+-------------------------
+
+```bash
+1.docker run -itd --privileged 名字:v1 /usr/sbin/init  
+docker exec -it ....
+2.进入之后先source /etc/profile
+3.开启hadoop
+start-all.sh
+jps查看是不是
+18465 DataNode
+19094 NodeManager
+19499 Jps
+18700 SecondaryNameNode
+18958 ResourceManager
+18302 NameNode
+
+4.开启hive 和 hiveserver2
+hive --service metastore &
+就可以使用hive了
+hiveserver2 &
+就可以使用beeline -u "jdbc:hive2://127.0.0.1:10000"
+jps查看
+18465 DataNode
+19798 RunJar
+19094 NodeManager
+19559 RunJar
+18700 SecondaryNameNode
+20044 Jps
+18958 ResourceManager
+18302 NameNode
+多了两个runjar
+5. spark shell
+6.hbase shell
+```
 ```bash
 安装JDK1.6或者以上版本。这里安装jdk1.6.0_45。 
 下载地址：http://www.oracle.com/technetwork/java/javase/downloads/index.html 
@@ -21,6 +56,29 @@ $ ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
 $ cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 验证ssh，# ssh localhost 
 不需要输入密码即可登录。
+安装mysql
+wget http://repo.mysql.com/mysql57-community-release-el7-10.noarch.rpm
+rpm -Uvh mysql57-community-release-el7-10.noarch.rpm
+yum install  -y  mysql-community-server
+
+> vi /etc/my.cnf # 最后一行增加 skip-grant-tables
+> service mysqld start
+> mysql
+mysql > use mysql;
+mysql > update user set authentication_string = password("root") where user='root';
+mysql > exit;
+> vi /etc/my.cnf # 去掉最后一行
+> service mysqld stop
+> service mysqld start
+> mysql -uroot -proot
+mysql > alter user 'root'@'localhost' identified by '123!@#qweQWE';
+mysql > flush privileges;
+mysql > exit;
+
+mysql > create user 'hadoop'@'localhost' identified by '123!@#qweQWE';
+mysql > grant all privileges on *.* to hadoop;
+mysql > create database hive;
+
 
 
 四，安装Hadoop2.6 
@@ -162,4 +220,91 @@ $ sbin/start-yarn.sh
 55118 ResourceManager
 54965 SecondaryNameNode
 2）在浏览器中输入：http://datanode-4:8099/ 即可看到YARN的ResourceManager的界面。注意：默认端口是8088，这里我设置了yarn.resourcemanager.webapp.address为：${yarn.resourcemanager.hostname}:8099
+
+接下在配置hive
+1.hive-env.sh
+HADOOP_HOME=
+HIVE_CONF_DIR=
+
+2.hive-site.xml
+<property>
+<name>javax.jdo.option.ConnectionUserName</name>
+<value>hadoop</value>
+</property>
+<property>
+<name>javax.jdo.option.ConnectionPassword</name>
+<value>123!@#qweQWE</value>
+</property>
+<property>
+<name>javax.jdo.option.ConnectionURL</name>
+<value>jdbc:mysql://127.0.0.1:3306/hive?createDatabaseIfNotExist=true</value>
+</property>
+<property>
+<name>javax.jdo.option.ConnectionDriverName</name>
+<value>com.mysql.jdbc.Driver</value>
+</property>
+3.初始化metastore
+
+> schematool -dbType mysql -initSchema
+
+然后装spark
+1.进入cd spark-2.3.2-bin-hadoop2.7/conf，修改文件
+cp conf/spark-env.sh.template conf /spark-env.sh
+cp conf/slaves.template conf/slaves
+2.打开修改spark-env.sh文件
+
+export JAVA_HOME=/home/ycl/java/jdk1.8.0_171
+export SCALA_HOME=/home/ycl/scala/scala-2.11.7 (可选)
+export SPARK_MASTER_IP=SparkMaster
+export SPARK_WORKER_MEMORY=2g
+export SPARK_WORKER_CORES=2
+export SPARK_WORKER_INSTANCES=11.。
+
+JAVA_HOME：Java安装目录 
+SCALA_HOME：Scala安装目录 
+SPARK_MASTER_IP：spark集群的Master节点的ip地址 
+SPARK_WORKER_MEMORY：每个worker节点能够最大分配给exectors的内存大小 
+SPARK_WORKER_CORES：每个worker节点所占有的CPU核数目 
+SPARK_WORKER_INSTANCES：每台机器上开启的worker节点的数目
+
+3.修改slaves文件
+加入localhost
+
+安装zookeeper
+1.tar -zxvf zookeeper-3.4.13.tar.gz -C /app
+2.复制配置文件并修改名称为zoo.cfg
+
+# mv zoo_sample.cfg zoo.cfg
+3.试一下能不能开
+bin/zkServer.sh
+然后关了。不然好像hbase开不了
+
+
+安装hbase
+1.tar -zxvf hbase-2.1.0-bin.tar.gz /app
+2.安装单机版很简单，我们只需要配置JDK的路径即可，我们将JDK的路径配置到conf/下的hbase.env.sh中
+3.编辑hbase-site.xml文件，在<configuration>标签中添加如下内容
+<property>
+  <property>
+       <name>hbase.rootdir</name>
+       <value>hdfs:///home/xlc/hbase</value>
+  </property>
+  <property>
+       <name>hbase.zookeeper.property.dataDir</name>
+       <value>/home/xlc/zookeeper</value>
+  </property>
+  <property>
+        <name>hbase.unsafe.stream.capability.enforce</name>
+        <value>false</value>
+  </property>
+</property>
+
+4.# SET HBASE_enviroment 
+
+HBASE_HOME=/app/hbase-2.1.0
+export PATH=$PATH:$HBASE_HOME/bin
+
+5.start-hbase.sh
+有HMaster
+hbase shell进入
 ```
