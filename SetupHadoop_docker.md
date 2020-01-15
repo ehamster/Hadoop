@@ -33,8 +33,10 @@ jps查看
 5. spark shell
 6.hbase shell
 ```
+
+安装JDK1.8或者以上版本。这里安装jdk1.6.0_45。 
+--------------------------
 ```bash
-安装JDK1.6或者以上版本。这里安装jdk1.6.0_45。 
 下载地址：http://www.oracle.com/technetwork/java/javase/downloads/index.html 
 1，下载jdk1.6.0_45-linux-x64.gz，解压到/usr/lib/jdk1.6.0_45。 
 2，在/root/.bash_profile中添加如下配置：
@@ -47,16 +49,19 @@ export PATH=$JAVA_HOME/bin:$PATH
 java version “1.6.0_45” 
 Java(TM) SE Runtime Environment (build 1.6.0_45-b06) 
 Java HotSpot(TM) 64-Bit Server VM (build 20.45-b01, mixed mode)
-
-
-三，配置SSH无密码登陆
-
+```
+配置SSH无密码登陆
+----------------
+```bash
 
 $ ssh-keygen -t dsa -P '' -f ~/.ssh/id_dsa
 $ cat ~/.ssh/id_dsa.pub >> ~/.ssh/authorized_keys
 验证ssh，# ssh localhost 
 不需要输入密码即可登录。
+```
 安装mysql
+---------------
+```bash
 wget http://repo.mysql.com/mysql57-community-release-el7-10.noarch.rpm
 rpm -Uvh mysql57-community-release-el7-10.noarch.rpm
 yum install  -y  mysql-community-server
@@ -78,17 +83,19 @@ mysql > exit;
 mysql > create user 'hadoop'@'localhost' identified by '123!@#qweQWE';
 mysql > grant all privileges on *.* to hadoop;
 mysql > create database hive;
+```
 
 
-
-四，安装Hadoop2.6 
-1，下载Hadoop2.6 
-下载地址：http://mirrors.hust.edu.cn/apache/hadoop/common/stable2/hadoop-2.6.0.tar.gz
+安装Hadoop2.7.7
+--------------
+```bash
+1，下载Hadoop2.7.7
+下载地址：http://mirrors.hust.edu.cn/apache/hadoop/common/stable2/hadoop-2.7.7.tar.gz
 
 
 2，解压安装 
-1），复制 hadoop-2.6.0.tar.gz 到/root/hadoop目录下， 
-然后#tar -xzvf hadoop-2.6.0.tar.gz 解压，解压后目录为：/root/hadoop/hadoop-2.6.0 
+1），复制 hadoop-2.7.7.tar.gz 到/root/hadoop目录下， 
+然后#tar -xzvf hadoop-2.7.7.tar.gz 解压，解压后目录为：/root/hadoop/hadoop-2.7.7 
 2），在/root /hadoop/目录下，建立tmp、hdfs/name、hdfs/data目录，执行如下命令 
 #mkdir /root/hadoop/tmp 
 #mkdir /root/hadoop/hdfs 
@@ -220,8 +227,10 @@ $ sbin/start-yarn.sh
 55118 ResourceManager
 54965 SecondaryNameNode
 2）在浏览器中输入：http://datanode-4:8099/ 即可看到YARN的ResourceManager的界面。注意：默认端口是8088，这里我设置了yarn.resourcemanager.webapp.address为：${yarn.resourcemanager.hostname}:8099
-
+```
 接下在配置hive
+--------------
+```bash
 1.hive-env.sh
 HADOOP_HOME=
 HIVE_CONF_DIR=
@@ -246,8 +255,10 @@ HIVE_CONF_DIR=
 3.初始化metastore
 
 > schematool -dbType mysql -initSchema
-
+```
 然后装spark
+------------
+```bash
 1.进入cd spark-2.3.2-bin-hadoop2.7/conf，修改文件
 cp conf/spark-env.sh.template conf /spark-env.sh
 cp conf/slaves.template conf/slaves
@@ -269,8 +280,10 @@ SPARK_WORKER_INSTANCES：每台机器上开启的worker节点的数目
 
 3.修改slaves文件
 加入localhost
-
+```
 安装zookeeper
+------------
+```bash
 1.tar -zxvf zookeeper-3.4.13.tar.gz -C /app
 2.复制配置文件并修改名称为zoo.cfg
 
@@ -278,9 +291,11 @@ SPARK_WORKER_INSTANCES：每台机器上开启的worker节点的数目
 3.试一下能不能开
 bin/zkServer.sh
 然后关了。不然好像hbase开不了
-
+```
 
 安装hbase
+----------
+```bash
 1.tar -zxvf hbase-2.1.0-bin.tar.gz /app
 2.安装单机版很简单，我们只需要配置JDK的路径即可，我们将JDK的路径配置到conf/下的hbase.env.sh中
 3.编辑hbase-site.xml文件，在<configuration>标签中添加如下内容
@@ -307,4 +322,18 @@ export PATH=$PATH:$HBASE_HOME/bin
 5.start-hbase.sh
 有HMaster
 hbase shell进入
+```
+可能出现的问题
+----------------
+```bash
+park查询hive表时可能会出现找不到表或者视图的情况，该情况是由于spark未知hive的配置。
+
+解决方案为：
+
+在hive的配置目录conf下，找到hive的配置文件hive-site.xml
+
+将该文件复制到spark的conf目录下
+
+重新运行spark shell或者通过spark-submit运行文件
+
 ```
