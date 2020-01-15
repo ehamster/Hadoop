@@ -31,7 +31,8 @@ jps查看
 18302 NameNode
 多了两个runjar
 5. spark shell
-6.hbase shell
+6.start-hbase.sh
+然后hbase 
 ```
 
 安装JDK1.8或者以上版本。这里安装jdk1.6.0_45。 
