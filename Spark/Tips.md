@@ -1,3 +1,4 @@
+```bash
 Docker： 启动container：  sudo docker run -t -i IMAGEPORT
 list变为DS scala> val ds = List("abcdef", "abcd", "cdef", "mnop").toDS
 1. 读取文件作为DataSet
@@ -120,7 +121,7 @@ result = result.drop(df2("n"))
 val separator = ","
 result.select(df("numbers",concat_ws(separator, df("value"), df2("value")).cast(StringType).as("values")).show()
 
-
+```
 关于spark资源问题
 ----
 ```bash
