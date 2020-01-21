@@ -1,6 +1,13 @@
 ```bash
 Docker： 启动container：  sudo docker run -t -i IMAGEPORT
 list变为DS scala> val ds = List("abcdef", "abcd", "cdef", "mnop").toDS
+0.当需要做group的时候，reduceByKey 比 groupby更好，优先配合pair rdd使用
+0.1将rdd转为pairrdd
+val pair_rdd = df3.rdd.map(row => (row.getString(0),row.getString(1)))
+//df里就俩字段 都是 string 所以这么写
+0.2 根据第一个字段，group 第二个字段 
+val rdd2 = pair_rdd.reduceByKey((x,y) => x + "\n" + y)
+
 1. 读取文件作为DataSet
 scala> val textFile = spark.read.textFile("README.md")
 
