@@ -8,6 +8,7 @@ docker run --runtime=nvidia ....
 新版本使用gpu:
 docker --gpu all
 docker ps -a #查看当前容器
+docker run --link wy_flask:localhost  两个容器通信，把flask看作是localhost
 docker run -it -v /home:/home -p 10000:10000 --name aaa --rm -e LANG=C.UTF-8 镜像名字:v1 bash
 ```
 -v就是把本地路径所有文件copy到容器一样的
