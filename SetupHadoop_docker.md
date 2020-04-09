@@ -338,3 +338,22 @@ park查询hive表时可能会出现找不到表或者视图的情况，该情况
 重新运行spark shell或者通过spark-submit运行文件
 
 ```
+
+
+```bash
+新版镜像多了spark为2.1.1，spark版本可以随时变换，只需要修改配置文件，但是1.*和2.*需要修改hive的配置文件不一样
+ spark升级到spark2以后，原有lib目录下的大JAR包被分散成多个小JAR包，原来的spark-assembly-*.jar已经不存在，所以hive没有办法找到这个JAR包。
+
+解决办法是：修改bin目录下的hive文件
+
+1 vim hive
+找到下面内容
+
+# add Spark assembly jar to the classpath
+if [[ -n "$SPARK_HOME" ]]
+then
+  sparkAssemblyPath=`ls ${SPARK_HOME}/lib/spark-assembly-*.jar`
+  CLASSPATH="${CLASSPATH}:${sparkAssemblyPath}"
+fi
+将紫色部分改为:sparkAssemblyPath=`ls ${SPARK_HOME}/jars/*.jar`
+```
