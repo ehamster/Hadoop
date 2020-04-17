@@ -77,11 +77,11 @@ mysql > exit;
 > service mysqld stop
 > service mysqld start
 > mysql -uroot -proot
-mysql > alter user 'root'@'localhost' identified by '123!@#qweQWE';
+mysql > alter user 'root'@'localhost' identified by 'root';
 mysql > flush privileges;
 mysql > exit;
 
-mysql > create user 'hadoop'@'localhost' identified by '123!@#qweQWE';
+mysql > create user 'hadoop'@'localhost' identified by 'hadoop';
 mysql > grant all privileges on *.* to hadoop;
 mysql > create database hive;
 ```
@@ -356,4 +356,26 @@ then
   CLASSPATH="${CLASSPATH}:${sparkAssemblyPath}"
 fi
 将紫色部分改为:sparkAssemblyPath=`ls ${SPARK_HOME}/jars/*.jar`
+```
+2.ubuntu
+----------------------
+```bash
+和centos不太一样
+1.假如忘记mysql密码
+ps -ef | grep -i mysql  //检查mysql是否运行
+
+service mysqld stop
+修改配置文件 /etc/my.cnf
+最后加一行skip-grant-tables
+重启服务 service mysqld start
+进入  mysql -uroot
+不用密码了
+
+然后修改密码
+use mysql;
+update mysql.user set authentication_string=password('root_password') where user='root';
+flush privileges;
+exit
+把刚刚加的最后一行删除
+重启服务就好了
 ```
