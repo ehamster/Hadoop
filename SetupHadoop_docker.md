@@ -260,17 +260,19 @@ HIVE_CONF_DIR=
 然后装spark
 ------------
 ```bash
+先把hive conf里的 hive-site.xml 复制到spark的conf里
 1.进入cd spark-2.3.2-bin-hadoop2.7/conf，修改文件
 cp conf/spark-env.sh.template conf /spark-env.sh
 cp conf/slaves.template conf/slaves
 2.打开修改spark-env.sh文件
 
-export JAVA_HOME=/home/ycl/java/jdk1.8.0_171
-export SCALA_HOME=/home/ycl/scala/scala-2.11.7 (可选)
-export SPARK_MASTER_IP=SparkMaster
-export SPARK_WORKER_MEMORY=2g
-export SPARK_WORKER_CORES=2
-export SPARK_WORKER_INSTANCES=11.。
+export SPARK_DIST_CLASSPATH=$(/usr/local/hadoop/bin/hadoop classpath)
+export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+export CLASSPATH=$CLASSPATH:/usr/local/hive/lib
+export SCALA_HOME=/usr/local/scala
+export HADOOP_CONF_DIR=/usr/local/hadoop/etc/hadoop
+export HIVE_CONF_DIR=/usr/local/hive/conf
+export SPARK_CLASSPATH=$SPARK_CLASSPATH:/usr/local/hive/lib/mysql-connector-java-5.1.40-bin.jar
 
 JAVA_HOME：Java安装目录 
 SCALA_HOME：Scala安装目录 
@@ -278,6 +280,23 @@ SPARK_MASTER_IP：spark集群的Master节点的ip地址
 SPARK_WORKER_MEMORY：每个worker节点能够最大分配给exectors的内存大小 
 SPARK_WORKER_CORES：每个worker节点所占有的CPU核数目 
 SPARK_WORKER_INSTANCES：每台机器上开启的worker节点的数目
+
+spark-shell里试一试能不能连上hive:
+Scala> import org.apache.spark.sql.Row
+Scala> import org.apache.spark.sql.SparkSession
+ 
+Scala> case class Record(key: Int, value: String)
+ 
+// warehouseLocation points to the default location for managed databases and tables
+Scala> val warehouseLocation = "spark-warehouse"
+ 
+Scala> val spark = SparkSession.builder().appName("Spark Hive Example").config("spark.sql.warehouse.dir", warehouseLocation).enableHiveSupport().getOrCreate()
+ 
+Scala> import spark.implicits._
+Scala> import spark.sql
+//下面是运行结果
+scala> sql("SELECT * FROM sparktest.student").show()
+
 
 3.修改slaves文件
 加入localhost
