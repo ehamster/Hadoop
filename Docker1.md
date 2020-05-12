@@ -124,4 +124,32 @@ docker node ls ------------查看所有节点
   docker service ps service_name  ---查看服务的任务
   
 
+
+
+```
+ubuntu18.04安装docker-ce
+===================
+
+```bash
+1.https://pkgs.org/ 
+下载依赖libltdl7_2.4.6-2_amd64.deb
+2.https://download.docker.com/linux/ubuntu/dists/bionic/pool/stable/amd64/
+下载这三个
+docker-ce-cli_18.09.6~3-0~ubuntu-bionic_amd64.deb
+containerd.io_1.2.5-1_amd64.deb
+docker-ce_18.09.6~3-0~ubuntu-bionic_amd64.deb
+3.sudo dpkg -i xx.deb进行安装
+ubuntu@ubuntu:~$ sudo dpkg -i libltdl7_2.4.6-2_amd64.deb 
+ubuntu@ubuntu:~$ sudo dpkg -i docker-ce-cli_18.09.6~3-0~ubuntu-bionic_amd64.deb 
+ubuntu@ubuntu:~$ sudo dpkg -i containerd.io_1.2.5-1_amd64.deb
+ubuntu@ubuntu:~$ sudo dpkg -i docker-ce_18.09.6~3-0~ubuntu-bionic_amd64.deb 
+4.好了查看版本
+docker -v
+
+5.安装docker compose的话
+下载 Docker-Compose: https://github.com/docker/compose/releases
+将下载的compose文件 "docker-compose-Linux-x86_64“ 改名为 “docker-compose”
+添加可执行权限
+# sudo chmod +x /usr/local/bin/docker-compose 
+docker-compose -v查看
 ```
