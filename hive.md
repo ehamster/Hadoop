@@ -397,6 +397,7 @@ hive到hdfs
 `````
 把表格保存到hdfs
 insert overwrite directory '/data/sms'
+hadoop fs -put 文件 表路径。
 select * from sms;
 从hdfs下载到本地
 hdfs dfs -get /data/s /homr/s
