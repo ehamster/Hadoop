@@ -1,4 +1,5 @@
 ```bash
+gitlab下载不动这个方法非常简单，什么都不用设置，只需要在链接的 github.com 后插入‘.cnpmjs.org’，其它不变。
 1.git status 查看是否有未提交
 2.git init 把当前目录变为管理仓库
 ```
