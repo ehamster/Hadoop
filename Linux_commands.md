@@ -10,3 +10,8 @@ sed -i 's/1/2/g' data.txt
 ```bash
 shuf a.txt -o b.txt
 ```
+3.分割文件
+```bash
+csplit a.txt 16 32
+按照16行和32行分割，生产3个文件
+```
